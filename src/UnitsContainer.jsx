@@ -1,20 +1,27 @@
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { TreeTable } from "primereact/treetable";
-import { memo } from "react";
+import { memo, useRef, useState } from "react";
+import AddEditUnitDialog from "./AddEditUnitDialog";
+import { useUnits } from "./contexts/UnitsContext/useUnits";
+import { Toast } from "primereact/toast";
 
 const UnitsContainer = memo((props) => {
-  const units = props?.units ? props.units : [];
-  const baseUnits = props?.baseUnits || [];
-  console.log(baseUnits);
+  const [selectedUnit, setSelectedUnit] = useState(null);
+  const [isAddEditUnitDialogVisible, setIsAddEditUnitDialogVisible] =
+    useState(false);
+
+  const unitsToDisplay = props?.units ? props.units : [];
+  const { units } = useUnits();
+  const toast = useRef(null);
 
   //template functions
   const parentValueTemplate = (rowData) => {
     let parentName = "";
 
     if (rowData.value) {
-      for (let i = 0; i < baseUnits.length; i++) {
-        const unit = baseUnits[i];
+      for (let i = 0; i < units.length; i++) {
+        const unit = units[i];
         if (unit.unitId === rowData.parentUnitId) {
           parentName = unit.value;
           break;
@@ -49,10 +56,38 @@ const UnitsContainer = memo((props) => {
     }
   };
 
+  //functions
+  const handleAddEditUnitDialogClose = (unit = null) => {
+    setSelectedUnit(null);
+    setIsAddEditUnitDialogVisible(false);
+    if (unit?.unitId >= 0) {
+      showAlert("success", "Information", "Operation Success", 1500);
+    }
+  };
+
+  const showAlert = (severity, summary, message = "", lifetime = 3000) => {
+    toast.current.show({
+      severity: severity,
+      summary: summary,
+      detail: message,
+      lifetime: lifetime,
+    });
+  };
+
   return (
     <>
-      <h2>Units</h2>
-      <TreeTable value={units} size="small">
+      <Toast ref={toast}></Toast>
+      <div className="flex flex-row mb-1">
+        <h2 className="m-0 p-0">Units</h2>
+      </div>
+
+      <AddEditUnitDialog
+        unit={selectedUnit}
+        isVisible={isAddEditUnitDialogVisible}
+        handleClose={handleAddEditUnitDialogClose}
+      ></AddEditUnitDialog>
+
+      <TreeTable value={unitsToDisplay} size="small">
         <Column
           field="name"
           header="Name"
@@ -69,11 +104,6 @@ const UnitsContainer = memo((props) => {
           field="isFractionable"
           header="Fractionable"
           style={{ width: "100px", maxWidth: "100px" }}
-        ></Column>
-        <Column
-          header="Action"
-          body={actionButtonsTemplate}
-          style={{ width: "150px", maxWidth: "150px" }}
         ></Column>
       </TreeTable>
     </>

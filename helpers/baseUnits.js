@@ -1,4 +1,3 @@
-import { cloneDeep } from "lodash";
 export const baseUnits = [
   {
     name: "Litre",
@@ -74,6 +73,7 @@ const findLineage = (() => {
       for (let i = 0; i < units.length; i++) {
         const unit = units[i];
         if (unit.parentUnitId === currentUnit.unitId) {
+          // debugger;
           currentUnit.children.push(findLineage(units, i));
         }
       }

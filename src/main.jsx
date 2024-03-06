@@ -2,11 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import { PrimeReactProvider } from "primereact/api";
+import UnitsProvider from "./contexts/UnitsContext/UnitsProvider.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <PrimeReactProvider>
-      <App />
+      <UnitsProvider>
+        <App />
+      </UnitsProvider>
     </PrimeReactProvider>
   </React.StrictMode>
 );
