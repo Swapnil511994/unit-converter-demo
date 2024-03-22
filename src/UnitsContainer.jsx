@@ -5,6 +5,7 @@ import { memo, useRef, useState } from "react";
 import AddEditUnitDialog from "./AddEditUnitDialog";
 import { useUnits } from "./contexts/UnitsContext/useUnits";
 import { Toast } from "primereact/toast";
+import UnitsDisplay from "./UnitsDisplay";
 
 const UnitsContainer = memo((props) => {
   const [selectedUnit, setSelectedUnit] = useState(null);
@@ -77,6 +78,10 @@ const UnitsContainer = memo((props) => {
   return (
     <>
       <Toast ref={toast}></Toast>
+
+      <UnitsDisplay></UnitsDisplay>
+
+      <hr />
       <div className="flex flex-row mb-1">
         <h2 className="m-0 p-0">Units</h2>
       </div>
@@ -99,11 +104,6 @@ const UnitsContainer = memo((props) => {
           header="Value"
           body={parentValueTemplate}
           style={{ width: "120px", maxWidth: "120px" }}
-        ></Column>
-        <Column
-          field="isFractionable"
-          header="Fractionable"
-          style={{ width: "100px", maxWidth: "100px" }}
         ></Column>
       </TreeTable>
     </>
