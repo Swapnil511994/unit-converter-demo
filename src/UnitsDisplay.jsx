@@ -3,6 +3,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { useState } from "react";
 import { useUnits } from "./contexts/UnitsContext/useUnits";
 import { convert } from "arbitary_unit_converter/dist/unit_converter";
+import { InputText } from "primereact/inputtext";
 
 export default function UnitsDisplay() {
   const [inputVal, setInputVal] = useState(0);
@@ -12,21 +13,21 @@ export default function UnitsDisplay() {
   const result = convert(units, selectedUnitId, inputVal);
 
   return (
-    <div className="flex flex-row gap-1">
-      <div className="w-2 m-1">
+    <div className="grid">
+      <div className="sm:col-12 lg:col-3 col-12 pt-2 mt-2">
         <span className="p-float-label">
           <InputNumber
             id="name"
             value={inputVal}
-            onChange={(e) => setInputVal(e.value)}
+            onChange={(e) => (e.value >= 0 ? setInputVal(e.value) : 0)}
             className="w-full"
           />
           <label htmlFor="name">Input Value</label>
         </span>
       </div>
 
-      <div className="w-2 m-1">
-        <span className="p-float-label w-full">
+      <div className="sm:col-12 lg:col-4 col-12 pt-2 mt-2">
+        <span className="p-float-label">
           <Dropdown
             id="parentSelector"
             options={units}
@@ -44,9 +45,17 @@ export default function UnitsDisplay() {
         </span>
       </div>
 
-      <div className="w-full m-1 flex align-content-center align-items-center">
-        <div>Result: </div>
-        <div>{result}</div>
+      <div className="sm:col-12 md:col-5 lg:col-5 col-12 pt-2 mt-2">
+        <span className="p-float-label">
+          <InputText
+            id="output"
+            value={result}
+            className="w-full"
+            readOnly
+            disabled
+          />
+          <label htmlFor="out">Output Value</label>
+        </span>
       </div>
     </div>
   );
